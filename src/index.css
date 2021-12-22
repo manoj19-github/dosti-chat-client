@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,400;1,100;1,300&family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,800;1,200;1,300&family=Pacifico&family=Poppins:ital,wght@0,100;0,200;1,100;1,200&family=Roboto:wght@100&display=swap');
+
+
+
+body {
+  margin: 0 !important;
+  padding:0 !important;
+  box-sizing: border-box !important;
+  min-height:100vh !important;
+  background-image: url("https://camo.githubusercontent.com/979fa3d9ec618786188d3502fe2fa85bd33a905743462616a46012321a1fd4c5/68747470733a2f2f706e672e706e67747265652e636f6d2f7468756d625f6261636b2f66683236302f6261636b67726f756e642f32303230313031392f706e67747265652d6461726b2d626c75652d746563686e6f6c6f67792d6261636b67726f756e642d776974682d6469676974616c2d6e6574776f726b2d6c696e65732d616e642d696c6c757374726174696f6e2d6f662d696d6167655f3432333432302e6a7067") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  font-family: 'Nunito', sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  color:"black";
+  overflow-x:hidden;
+
+
+}
