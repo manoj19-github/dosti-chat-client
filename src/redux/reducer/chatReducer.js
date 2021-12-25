@@ -1,4 +1,5 @@
 import {chatsTypes} from "../action/Types"
+
 const initChat={
   loading:false,
   chatData:null,
@@ -6,8 +7,12 @@ const initChat={
   chatRenamed:false,
   error:null
 }
+
 export const chatReducer=(state=initChat,action)=>{
-  const {type,payload}=action
+
+
+    const {type,payload}=action
+
   switch(type){
     case chatsTypes.CHAT_REQUEST:
       return{
@@ -67,7 +72,18 @@ export const chatReducer=(state=initChat,action)=>{
       }
     }
     else return state
+  case chatsTypes.UPDATE_LATEST_MESSAGE:
+    let updatechat=state.chatData.map(chat=>{
+      if(chat._id===payload.chat._id){
+        chat.latestMessage=payload
+      }
+      return chat
+    })
 
+    return{
+      ...state,
+      chatData:updatechat
+    }
   case chatsTypes.CHAT_FAILED:
       return{
         ...state,
@@ -76,6 +92,44 @@ export const chatReducer=(state=initChat,action)=>{
         newChatAdded:false,
         chatRenamed:false
       }
+  case chatsTypes.CHAT_USER_LOGIN:
+
+    if(state.chatData && state.chatData.length){
+      state.chatData.forEach((chat)=>{
+          if(!chat.isGroupChat){
+            chat.users.forEach(user=>{
+              if(user._id===payload){
+                user.isOnline=true
+              }
+              return user
+            })
+          }
+          return chat
+        }
+
+      )
+    }
+
+    return state
+
+  case chatsTypes.CHAT_USER_LOGOUT:
+      if(state.chatData && state.chatData.length){
+        state.chatData.forEach((chat)=>{
+            if(!chat.isGroupChat){
+              chat.users.forEach(user=>{
+                if(user._id===payload){
+                  user.isOnline=false
+                }
+                return user
+              })
+            }
+            return chat
+          }
+        )
+
+      }
+    return state
+    
     default: return state
   }
 }

@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react'
+import React,{useState} from 'react'
 import {useHistory} from "react-router-dom"
 import * as Yup from  "yup"
 import {Formik,Form as MyForm,Field} from "formik"
@@ -16,7 +16,6 @@ import {
 from "@chakra-ui/input"
 
 import {useToast} from "@chakra-ui/react"
-
 import {
   FormControl,FormLabel,
   FormErrorMessage
@@ -24,6 +23,7 @@ import {
 
 
 const Login = () => {
+
   const toast=useToast()  // get the toast from chakra ui
   const dispatch=useDispatch()
   const history=useHistory()
@@ -45,6 +45,7 @@ const Login = () => {
     onSubmitProps.resetForm()
     try{
         dispatch(loginAction(values))   // network call
+
         if(userToken){
           toast({
             title:`${userAccountData.message}`,
@@ -92,7 +93,7 @@ const Login = () => {
             {
               formik=>{
                 return(
-                  <MyForm>
+                  <MyForm autoComplete="false">
                     <Field name="email">
                       {
                         ({field,form})=>(
@@ -106,6 +107,7 @@ const Login = () => {
                                 {...field}
                                 id="email"
                                 placeholder="Enter Your Email"
+                                autoComplete="false"
                               />
                             <FormErrorMessage  style={{margin:"14px 0"}}>{form.errors.email}</FormErrorMessage>
                           </FormControl>

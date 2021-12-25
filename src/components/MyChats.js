@@ -7,21 +7,29 @@ import {Button} from "@chakra-ui/button"
 import {AddIcon} from "@chakra-ui/icons"
 import ChatLoading from "./misc/ChatLoading"
 import {selectUsersAction} from "../redux/action/users/selectUsersAction"
-import {getSender} from "../config/chatLogics"
+import moment from "moment-timezone"
+import "./mystyles.css"
+import {
+  getSender,getSenderPic,
+  getGroupMessageSender,
+  checkUsersOnline,
+  getMessageData
+} from "../config/chatLogics"
 import GroupChatModal from "./misc/GroupChatModal"
+import {Avatar,AvatarBadge} from "@chakra-ui/avatar"
 const MyChats = () => {
   const chatLoading=useSelector(state=>state.chatReducer.loading)
   const dispatch=useDispatch()
   useEffect(()=>{
     dispatch(fetchChatAction())
   },[chatLoading,dispatch])
-  const toast=useToast()
   const chatData=useSelector(state=>state.chatReducer.chatData)
   const selectChatResult=useSelector(state=>state.selectUserReducer.selectChatResult)
   const loggedUser=useSelector(state=>state.authReducer.userAccountData.sendUser)
   const handleChatClick=(chat)=>{
     const userId=chat.isGroupChat?chat._id:chat.users[0]._id===loggedUser._id? chat.users[1]._id :chat.users[0]._id
     dispatch(selectUsersAction(userId))
+
   }
 
     return (
@@ -71,6 +79,7 @@ const MyChats = () => {
               <Box
                 onClick={()=>handleChatClick(chat)}
                 cursor="pointer"
+
                 bg={selectChatResult?._id === chat?._id?"#3882ac":"#e8e8e8"}
                 color={selectChatResult?._id === chat?._id ?"white":"black"}
                 px={3}
@@ -78,12 +87,54 @@ const MyChats = () => {
                 borderRadius="lg"
                 key={index}
               >
+              <Box
+                d="flex"
+                flexDirection="row"
+
+
+                alignItems="center"
+              >
+              <Avatar
+                mr={2}
+                size="sm"
+                cursor="pointer"
+                name={chat.isGroupChat?(chat.chatName):(
+                  getSender(loggedUser,chat.users)
+                )}
+                src={chat.isGroupChat?(chat.chatName):(
+                  getSenderPic(loggedUser,chat.users)
+                )}
+              >
+              {!chat.isGroupChat && checkUsersOnline(loggedUser,chat.users) &&
+                <AvatarBadge borderColor='papayawhip' bg='green' boxSize='1.0em' />
+              }
+
+              </Avatar>
+
+              <Box ml={4}>
                 <Text>
                   {chat.isGroupChat?(chat.chatName):(
                     getSender(loggedUser,chat.users)
                   )}
 
                 </Text>
+                <Box d="flex" alignItems="center">
+              {chat.isGroupChat &&(  <Text mr={4} fontSize="xs">{getGroupMessageSender(loggedUser,chat.latestMessage?.sender)} </Text>)}
+                <Text fontSize="sm" >{chat.latestMessage?.content.slice(0,30)}</Text>
+
+                </Box>
+                </Box>
+                <Text fontSize="xs" ml={7} >
+                      {
+                        chat.latestMessage ?(
+                          getMessageData(chat.latestMessage.updatedAt)
+                        )
+                        :""
+                      } 
+                </Text>
+
+
+              </Box>
               </Box>
 
             ))

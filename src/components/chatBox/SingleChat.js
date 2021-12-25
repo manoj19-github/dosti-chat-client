@@ -6,6 +6,7 @@ import {
 } from "@chakra-ui/react"
 import {selectChatTypes} from "../../redux/action/Types"
 import{ArrowBackIcon} from "@chakra-ui/icons"
+import IdleTimer from "react-idle-timer"
 import{IconButton} from "@chakra-ui/button"
 import {getSender,getSenderData} from "../../config/chatLogics"
 import ProfileModel from "../misc/ProfileModel"
@@ -18,8 +19,9 @@ import ScrollableChat from "./ScrollableChat"
 import {BsEmojiSmile} from "react-icons/bs"
 import Picker from "emoji-picker-react"
 import io from "socket.io-client"
-import {messageTypes,notificationTypes} from "../../redux/action/Types"
+import {messageTypes,notificationTypes,chatsTypes} from "../../redux/action/Types"
 import Lottie from "react-lottie"
+import {logoutAction} from "../../redux/action/authAction/loginAction"
 import animationData from "../../anim/typing.json"
 
 import "../../components/mystyles.css"
@@ -45,8 +47,9 @@ const SingleChat = () => {
   const authUser=useSelector(state=>state.authReducer.userAccountData.sendUser)
   const messageLoading=useSelector(state=>state.messagesReducer.loading)
   const newMessageLoading=useSelector(state=>state.messagesReducer.newMessageLoading)
-  const messageData=useSelector(state=>state.messagesReducer.messages)
+
   const notifyData=useSelector(state=>state.notifyReducer.notifyData)
+  const chatData=useSelector(state=>state.chatReducer.chatData)
 
   // defaultOptions for lottie
   const defaultOptions={
@@ -61,6 +64,7 @@ const SingleChat = () => {
 
   // socket configuration for client side
   useEffect(()=>{
+
     socket=io(SERVER_URL)
     socket.emit("setup",authUser)
     socket.on("connected",()=>{
@@ -72,7 +76,20 @@ const SingleChat = () => {
     socket.on("stopTyping",()=>{
       setIsTyping(false)
     })
+
   },[])
+  console.log("chatData",chatData)
+  useEffect(()=>{
+    let loggedData={chatData,authUser}
+     socket.emit("userLogin",loggedData)
+    window.addEventListener("beforeunload",(e)=>{
+      e.preventDefault()
+      e.returnValue=""
+      dispatch(logoutAction())
+      sessionStorage.removeItem("dosti-account-info")
+      socket.emit("userLogout",loggedData)
+    })
+  },[dispatch,chatData,selectedChat])
 
 
 
@@ -137,6 +154,7 @@ const SingleChat = () => {
 
     useEffect(()=>{
       dispatch(fetchAllMessagesAction(selectedChat,socket))
+
       selectedChatCompare=selectedChat
     },[dispatch,selectedChat])
 
@@ -145,7 +163,7 @@ const SingleChat = () => {
     useEffect(()=>{
       socket.on("messageReceived",(newMessageReceived)=>{
           if(!selectedChatCompare ||
-          selectedChatCompare._id!== newMessageReceived.chat._id
+          selectedChatCompare._id!=  newMessageReceived.chat._id
         ){
           // give notification
           if(!notifyData.includes(newMessageReceived)){
@@ -153,6 +171,12 @@ const SingleChat = () => {
               type:notificationTypes.NOTIFY_SUCCESS,
               payload:newMessageReceived
             })
+            dispatch({
+              type:chatsTypes.UPDATE_LATEST_MESSAGE,
+              payload:newMessageReceived
+            })
+            localStorage.removeItem("dosti-chat-notifyData")
+            if(notifyData.length)
             localStorage.setItem("dosti-chat-notifyData",JSON.stringify(notifyData))
           }
 
@@ -162,16 +186,26 @@ const SingleChat = () => {
             type:messageTypes.ADD_NEW_MESSAGE_SUCCESS,
             payload:newMessageReceived
           })
+          dispatch({
+            type:chatsTypes.UPDATE_LATEST_MESSAGE,
+            payload:newMessageReceived
+          })
         }
-
-
-
     })
+    socket.on("userLogged",(userId)=>{
+      dispatch({type:chatsTypes.CHAT_USER_LOGIN,payload:userId})
+    })
+    socket.on("userLoggedOut",(userId)=>{
+      dispatch({type:chatsTypes.CHAT_USER_LOGOUT,payload:userId})
+    })
+
+
 
   },[dispatch])
 
     return (
         <>
+
           {
             selectedChat?(
               <>
@@ -216,6 +250,7 @@ const SingleChat = () => {
                     h="100%"
                     borderRadius="lg"
                     overflowY="hidden"
+
                     >
 
                   {/* messages here */}
@@ -230,7 +265,7 @@ const SingleChat = () => {
                         />
                       ):(
                         <div className="messages" >
-                          <ScrollableChat messageData={messageData}/>
+                          <ScrollableChat/>
                         </div>
                       )
                   }

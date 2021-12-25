@@ -49,8 +49,8 @@ const SideDrawer = () => {
   const [search,setSearch]=useState("")
 
   const logoutHandler=()=>{
+    dispatch(logoutAction())
     sessionStorage.removeItem("dosti-account-info")
-    logoutAction()
     history.push("/")
   }
   const {isOpen,onOpen,onClose}=useDisclosure()
@@ -109,10 +109,12 @@ const SideDrawer = () => {
       type:notificationTypes.NOTIFY_RESET,
       payload:note
     })
+    if(!notifyData.length){
+      localStorage.getItem("dosti-chat-notifyData") &&
+      localStorage.removeItem("dosti-chat-notifyData")
+    }
     if(notifyData.length>1)
       localStorage.setItem("dosti-chat-notifyData",JSON.stringify(notifyData))
-
-
   }
 
 

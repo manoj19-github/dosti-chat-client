@@ -108,6 +108,7 @@ const Signup = () => {
                                 {...field}
                                 id="name"
                                 placeholder="Enter Your Name"
+                                autoComplete="false"
                               />
                             <FormErrorMessage  style={{margin:"14px 0"}}>{form.errors.name}</FormErrorMessage>
                           </FormControl>
@@ -128,6 +129,7 @@ const Signup = () => {
                                 {...field}
                                 id="email"
                                 placeholder="Enter Your Email"
+                                autoComplete="false"
                               />
                             <FormErrorMessage  style={{margin:"14px 0"}}>{form.errors.email}</FormErrorMessage>
                           </FormControl>

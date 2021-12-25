@@ -22,14 +22,18 @@ export const notifyReducer=(state=initState,action)=>{
       var filterNotifyData=[]
       if(state.notifyData.length){
         filterNotifyData=state.notifyData.filter(note=>note.chat._id !== payload.chat._id)
-        if(filterNotifyData.length){
+      }
+      if(filterNotifyData.length){
 
-          return {
-            notifyData:[...filterNotifyData]
-          }
+        return {
+          notifyData:[...filterNotifyData]
         }
+      }else{
+
+          localStorage.removeItem("dosti-chat-notifyData")
       }
       return initState
+
     default:return state
   }
 }

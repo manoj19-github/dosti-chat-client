@@ -8,6 +8,8 @@ export const loginAction=(regData)=>async dispatch=>{
         "Content-Type":"application/json",
       },
     })
+    console.log(data)
+
     sessionStorage.setItem("dosti-account-info",JSON.stringify(data))
     dispatch({type:authTypes.LOGIN_SUCCESS,payload:data})
   }catch(err){
@@ -15,8 +17,22 @@ export const loginAction=(regData)=>async dispatch=>{
   }
 }
 
-export const logoutAction=()=>dispatch=>{
+export const logoutAction=()=>async(dispatch,getState)=>{
 
-  dispatch({type:authTypes.LOGOUT_REQUEST})
+  try{
+    const userId=getState().authReducer.userAccountData.sendUser._id
 
+    const {data}=await axios.post(
+      `/api/user/logout`,
+      {userId},
+      {
+        headers:{
+          "Content-Type":"application/json",
+        },
+    })
+
+    dispatch({type:authTypes.LOGOUT_REQUEST})
+  }catch(err){
+    console.log(`something went wrong in logout action`)
+  }
 }

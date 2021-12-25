@@ -1,4 +1,4 @@
-import {messageTypes} from "../Types"
+import {messageTypes,chatsTypes} from "../Types"
 import axios from "axios"
 
 const sendNewMessageAction=(content,chatId,socket)=>async(dispatch,getState)=>{
@@ -16,6 +16,10 @@ const sendNewMessageAction=(content,chatId,socket)=>async(dispatch,getState)=>{
     socket.emit("newMessage",data.message)
     dispatch({
       type:messageTypes.ADD_NEW_MESSAGE_SUCCESS,
+      payload:data.message
+    })
+    dispatch({
+      type:chatsTypes.UPDATE_LATEST_MESSAGE,
       payload:data.message
     })
 
