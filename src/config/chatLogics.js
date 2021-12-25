@@ -11,7 +11,7 @@ export const getSenderData=(loggedUser,users)=>{
 }
 export const getGroupMessageSender=(loggedUser,user)=>{
 
-  return user._id &&  user._id===loggedUser._id? "You ":user.name.split(" ")[0]
+  return user?._id &&  user?._id===loggedUser._id? "You ":user?.name.split(" ")[0]
 }
 export const checkUsersOnline=(loggedUser,users)=>{
   return users[0]._id===loggedUser._id? users[1]?.isOnline :users[0]?.isOnline
