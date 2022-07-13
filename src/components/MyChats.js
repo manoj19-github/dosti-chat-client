@@ -69,6 +69,7 @@ const MyChats = () => {
       bg="#f8f8f8"
       w="100%"
       h="100%"
+      overflowY={"hidden"}
       borderRadius="lg"
     >
     {
@@ -120,7 +121,7 @@ const MyChats = () => {
                 </Text>
                 <Box d="flex" alignItems="center">
               {chat.isGroupChat &&(  <Text mr={4} fontSize="xs">{getGroupMessageSender(loggedUser,chat.latestMessage?.sender)} </Text>)}
-                <Text fontSize="sm" >{chat.latestMessage?.content.slice(0,30)}</Text>
+                <Text fontSize="sm" >{chat.latestMessage?.content?.slice(0,30)}</Text>
 
                 </Box>
                 </Box>

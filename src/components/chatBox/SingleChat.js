@@ -166,7 +166,9 @@ const SingleChat = () => {
           selectedChatCompare._id!=  newMessageReceived.chat._id
         ){
           // give notification
+          console.log("newMessage : ",newMessageReceived)
           if(!notifyData.includes(newMessageReceived)){
+            console.log("newMessage1 : ",newMessageReceived)
             dispatch({
               type:notificationTypes.NOTIFY_SUCCESS,
               payload:newMessageReceived

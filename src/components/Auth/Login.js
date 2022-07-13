@@ -29,7 +29,7 @@ const Login = () => {
   const history=useHistory()
   const userAccountData=useSelector(state=>state.authReducer.userAccountData)
   const userToken=useSelector(state=>state.authReducer.userToken)
-
+  const [isLoading,setIsLoading]=useState(false)
 
   const initFormData={email:'',password:''}
   const validationSchema=Yup.object({
@@ -42,11 +42,13 @@ const Login = () => {
   })
 
   const submitHandler=(values,onSubmitProps)=>{
+    setIsLoading(true)
     onSubmitProps.resetForm()
     try{
         dispatch(loginAction(values))   // network call
 
         if(userToken){
+          setIsLoading(false)
           toast({
             title:`${userAccountData.message}`,
             status:"success",
@@ -59,6 +61,7 @@ const Login = () => {
           },3000)
 
         }else{
+          setIsLoading(false)
           toast({
             title:`${userAccountData.message}`,
             status:"error",
@@ -148,13 +151,14 @@ const Login = () => {
                       type="submit"
                       colorScheme="blue"
                       width="100%"
-                      isLoading={ formik.isSubmitting}
+                      isLoading={isLoading}
                       style={{marginTop:14}}
                       >Login  </Button>
                       <Button
                         type="button"
                         colorScheme="red"
                         width="100%"
+                        isLoading={ formik.isSubmitting}
                         onClick={handleGuestUser}
                         style={{marginTop:14}}
                         >Get Guest User Credential </Button>

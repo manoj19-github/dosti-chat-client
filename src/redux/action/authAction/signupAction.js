@@ -7,11 +7,12 @@ export const signupAction=async(regData)=>{
     formData.append("email",regData.email)
     formData.append("password",regData.password)
     if(regData.pic){
-      if(regData.pic.type && (regData.pic.type !== "image/jpeg" || regData.pic.type !== "image/jpg" ||
-       regData.pic.type !== "image/png")){
-        alert("please select jpg,jpeg or png format image")
-        return
-      }
+      console.log("picture type: ",regData.pic.type)
+      // if(regData.pic.type && (regData.pic.type !== "image/jpeg" || regData.pic.type !== "image/jpg" ||
+      //  regData.pic.type !== "image/png")){
+      //   alert("please select jpg,jpeg or png format image")
+      //   return
+      // }
       formData.append("pic",regData.pic)
     }
 
