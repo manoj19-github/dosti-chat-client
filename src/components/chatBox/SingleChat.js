@@ -175,6 +175,10 @@ const SingleChat = () => {
               type:chatsTypes.UPDATE_LATEST_MESSAGE,
               payload:newMessageReceived
             })
+             dispatch({
+                type:chatsTypes.CHAT_ADD,
+                payload:newMessageReceived.chat
+             })
             localStorage.removeItem("dosti-chat-notifyData")
             if(notifyData.length)
             localStorage.setItem("dosti-chat-notifyData",JSON.stringify(notifyData))
