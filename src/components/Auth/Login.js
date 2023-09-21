@@ -153,7 +153,7 @@ const Login = () => {
                       width="100%"
                       isLoading={isLoading}
                       style={{marginTop:14}}
-                      >Login  </Button>
+                      >{isLoding?'Please Wait':'Login'}  </Button>
                       <Button
                         type="button"
                         colorScheme="red"
